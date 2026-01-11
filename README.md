@@ -88,3 +88,16 @@ jsonCopiar{
 NOTE: We recommend sending the challenge even if you didn't manage to finish all the parts.
 
 This is the deploy url: https://user-management-api-wei3ljgf7q-uc.a.run.app/docs#/
+
+# To test Locally
+
+## Install dependencies
+./run.sh setup
+
+## Run tests
+./run.sh test
+
+## Run the application
+./run.sh run
+
+Finaly open : http://localhost:8080/docs
