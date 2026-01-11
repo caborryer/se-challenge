@@ -24,8 +24,6 @@ steps:
     args:
       - 'build'
       - '-t'
-      - 'gcr.io/$PROJECT_ID/user-management-api:$COMMIT_SHA'
-      - '-t'
       - 'gcr.io/$PROJECT_ID/user-management-api:latest'
       - '.'
     waitFor: ['run-tests']
@@ -35,18 +33,10 @@ steps:
     id: 'push-image'
     args:
       - 'push'
-      - 'gcr.io/$PROJECT_ID/user-management-api:$COMMIT_SHA'
+      - 'gcr.io/$PROJECT_ID/user-management-api:latest'
     waitFor: ['build-image']
 
-  # Step 4: Push latest tag
-  - name: 'gcr.io/cloud-builders/docker'
-    id: 'push-latest'
-    args:
-      - 'push'
-      - 'gcr.io/$PROJECT_ID/user-management-api:latest'
-    waitFor: ['push-image']
-
-  # Step 5: Deploy to Cloud Run
+  # Step 4: Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'deploy-cloud-run'
     entrypoint: 'gcloud'
@@ -55,7 +45,7 @@ steps:
       - 'deploy'
       - 'user-management-api'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/user-management-api:$COMMIT_SHA'
+      - 'gcr.io/$PROJECT_ID/user-management-api:latest'
       - '--region'
       - 'us-central1'
       - '--platform'
@@ -75,11 +65,10 @@ steps:
       - '8080'
       - '--timeout'
       - '300'
-    waitFor: ['push-latest']
+    waitFor: ['push-image']
 
 # Images to be pushed to Container Registry
 images:
-  - 'gcr.io/$PROJECT_ID/user-management-api:$COMMIT_SHA'
   - 'gcr.io/$PROJECT_ID/user-management-api:latest'
 
 # Build configuration options
