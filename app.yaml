@@ -1,0 +1,31 @@
+# App Engine configuration file (alternative to Cloud Run)
+# This can be used if deploying to App Engine instead of Cloud Run
+
+runtime: python311
+entrypoint: gunicorn -w 4 -k uvicorn.workers.UvicornWorker app.main:app
+
+instance_class: F2
+
+automatic_scaling:
+  min_instances: 1
+  max_instances: 10
+  target_cpu_utilization: 0.65
+  target_throughput_utilization: 0.65
+
+env_variables:
+  ENVIRONMENT: 'production'
+  APP_NAME: 'User Management API'
+  APP_VERSION: '1.0.0'
+  LOG_LEVEL: 'INFO'
+  API_V1_PREFIX: '/api/v1'
+
+# Uncomment and configure for Cloud SQL connection
+# beta_settings:
+#   cloud_sql_instances: PROJECT_ID:REGION:INSTANCE_NAME
+
+handlers:
+- url: /.*
+  script: auto
+  secure: always
+  redirect_http_response_code: 301
+
